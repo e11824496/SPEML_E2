@@ -1,6 +1,7 @@
 from __future__ import print_function
 
-import argparse
+#import notebook tqdm
+from tqdm.autonotebook import tqdm
 import os
 
 import torch
@@ -9,7 +10,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 
 from helpers.loaders import *
-from helpers.utils import progress_bar, parse_args
+from helpers.utils import parse_args
 
 def predict(args):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -41,7 +42,7 @@ def predict(args):
     test_loss = 0
     correct = 0
     total = 0
-    for batch_idx, (inputs, targets) in enumerate(loader):
+    for batch_idx, (inputs, targets) in enumerate(tqdm(loader)):
         inputs, targets = inputs.to(device), targets.to(device)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
@@ -51,7 +52,8 @@ def predict(args):
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
-        progress_bar(batch_idx, len(loader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
+        
+        tqdm.write('Loss: %.3f | Acc: %.3f%% (%d/%d)'
                     % (test_loss / (batch_idx + 1), 100. * correct / total, correct, total))
 
     

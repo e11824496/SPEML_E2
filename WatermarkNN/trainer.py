@@ -1,12 +1,9 @@
 import numpy as np
 import torch
 from torch.autograd import Variable
-
-from helpers.utils import progress_bar
+from tqdm.autonotebook import tqdm
 
 # Train function
-
-
 def train_epoch(epoch, net, criterion, optimizer, logfile, loader, device, wmloader=False, tune_all=True):
     print('\nEpoch: %d' % epoch)
     net.train()
@@ -35,7 +32,7 @@ def train_epoch(epoch, net, criterion, optimizer, logfile, loader, device, wmloa
 
         # the wm_idx to start from
         wm_idx = np.random.randint(len(wminputs))
-    for batch_idx, (inputs, targets) in enumerate(loader):
+    for batch_idx, (inputs, targets) in enumerate(tqdm(loader)):
         iteration += 1
         inputs, targets = inputs.to(device), targets.to(device)
 
@@ -56,67 +53,13 @@ def train_epoch(epoch, net, criterion, optimizer, logfile, loader, device, wmloa
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
-        progress_bar(batch_idx, len(loader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
+        tqdm.write('Loss: %.3f | Acc: %.3f%% (%d/%d)'
                      % (train_loss / (batch_idx + 1), 100. * correct / total, correct, total))
 
     with open(logfile, 'a') as f:
         f.write('Epoch: %d\n' % epoch)
         f.write('Loss: %.3f | Acc: %.3f%% (%d/%d)\n'
                 % (train_loss / (batch_idx + 1), 100. * correct / total, correct, total))
-
-
-# train function in a teacher-student fashion
-def train_teacher(epoch, net, criterion, optimizer, use_cuda, logfile, loader, wmloader):
-    print('\nEpoch: %d' % epoch)
-    net.train()
-    train_loss = 0
-    correct = 0
-    total = 0
-    iteration = -1
-
-    # get the watermark images
-    wminputs, wmtargets = [], []
-    if wmloader:
-        for wm_idx, (wminput, wmtarget) in enumerate(wmloader):
-            if use_cuda:
-                wminput, wmtarget = wminput.cuda(), wmtarget.cuda()
-            wminputs.append(wminput)
-            wmtargets.append(wmtarget)
-        # the wm_idx to start from
-        wm_idx = np.random.randint(len(wminputs))
-
-    for batch_idx, (inputs, targets) in enumerate(loader):
-        iteration += 1
-        if use_cuda:
-            inputs, targets = inputs.cuda(), targets.cuda()
-
-        if wmloader:
-            # add wmimages and targets
-            inputs = torch.cat([inputs, wminputs[(wm_idx + batch_idx) % len(wminputs)]], dim=0)
-            targets = torch.cat([targets, wmtargets[(wm_idx + batch_idx) % len(wminputs)]], dim=0)
-
-        inputs, targets = Variable(inputs), Variable(targets)
-
-        optimizer.zero_grad()
-        outputs = net(inputs)
-        loss = criterion(outputs, targets)
-
-        loss.backward()
-        optimizer.step()
-
-        train_loss += loss.item()
-        _, predicted = torch.max(outputs.data, 1)
-        total += targets.size(0)
-        correct += predicted.eq(targets.data).cpu().sum()
-
-        progress_bar(batch_idx, len(loader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-                     % (train_loss / (batch_idx + 1), 100. * correct / total, correct, total))
-
-    with open(logfile, 'a') as f:
-        f.write('Epoch: %d\n' % epoch)
-        f.write('Loss: %.3f | Acc: %.3f%% (%d/%d)\n'
-                % (train_loss / (batch_idx + 1), 100. * correct / total, correct, total))
-
 
 # Test function
 def test(net, criterion, logfile, loader, device):
@@ -124,7 +67,7 @@ def test(net, criterion, logfile, loader, device):
     test_loss = 0
     correct = 0
     total = 0
-    for batch_idx, (inputs, targets) in enumerate(loader):
+    for batch_idx, (inputs, targets) in enumerate(tqdm(loader)):
         inputs, targets = inputs.to(device), targets.to(device)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
@@ -134,7 +77,7 @@ def test(net, criterion, logfile, loader, device):
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
-        progress_bar(batch_idx, len(loader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
+        tqdm.write('Loss: %.3f | Acc: %.3f%% (%d/%d)'
                      % (test_loss / (batch_idx + 1), 100. * correct / total, correct, total))
 
     with open(logfile, 'a') as f:
