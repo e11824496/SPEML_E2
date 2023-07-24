@@ -54,8 +54,7 @@ def train_epoch(epoch, net, criterion, optimizer, logfile, loader, device, wmloa
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
-        pbar.set_description('Loss: %.3f | Acc: %.3f%% (%d/%d)'
-                     % (train_loss / (batch_idx + 1), 100. * correct / total, correct, total))
+        pbar.set_postfix(Loss = train_loss / (batch_idx + 1), ACC = 100. * correct / total)
 
     with open(logfile, 'a') as f:
         f.write('Epoch: %d\n' % epoch)
@@ -79,8 +78,7 @@ def test(net, criterion, logfile, loader, device):
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
-        pbar.set_description('Loss: %.3f | Acc: %.3f%% (%d/%d)'
-                     % (test_loss / (batch_idx + 1), 100. * correct / total, correct, total))
+        pbar.set_postfix(Loss = test_loss / (batch_idx + 1), ACC = 100. * correct / total)
 
     with open(logfile, 'a') as f:
         f.write('Test results:\n')

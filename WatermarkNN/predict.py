@@ -54,8 +54,7 @@ def predict(args):
         correct += predicted.eq(targets.data).cpu().sum()
 
         
-        pbar.set_description('Loss: %.3f | Acc: %.3f%% (%d/%d)'
-                    % (test_loss / (batch_idx + 1), 100. * correct / total, correct, total))
+        pbar.set_postfix(Loss = test_loss / (batch_idx + 1), ACC = 100. * correct / total)
 
     
 if __name__ == '__main__':
