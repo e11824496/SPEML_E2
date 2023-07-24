@@ -6,13 +6,13 @@ import torch
 import torchvision
 import torchvision.datasets as datasets
 import torchvision.transforms as transforms
-from helpers.consts import *
+from helpers.consts import CIFAR10, MNIST
 from helpers.ImageFolderCustomClass import ImageFolderCustomClass
 
 
 def _getdatatransformsdb(datatype):
     transform_train, transform_test = None, None
-    if datatype.lower() == CIFAR10 or datatype.lower() == CIFAR100:
+    if datatype.lower() == CIFAR10:
         # Data preperation
         print('==> Preparing data..')
         transform_train = transforms.Compose([
@@ -25,6 +25,24 @@ def _getdatatransformsdb(datatype):
             transforms.ToTensor(),
             transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
         ])
+    elif datatype.lower() == MNIST:
+        # add transform for MNIST and create 3 channels
+        transform_train = transforms.Compose([
+            torchvision.transforms.Grayscale(num_output_channels=3),
+            transforms.Resize(32),
+            transforms.ToTensor(),
+            transforms.Normalize((0.1307, 0.1307, 0.1307), (0.3081, 0.3081, 0.3081))
+        ])
+
+        transform_test = transforms.Compose([
+            torchvision.transforms.Grayscale(num_output_channels=3),
+            transforms.Resize(32),
+            transforms.ToTensor(),
+            transforms.Normalize((0.1307, 0.1307, 0.1307), (0.3081, 0.3081, 0.3081))
+        ])
+
+        
+
     else:
         transform_train = transforms.Compose([
             transforms.Resize(32),
@@ -58,15 +76,15 @@ def getdataloader(datatype, train_db_path, test_db_path, batch_size):
                                                train=False, download=True,
                                                transform=transform_test)
         n_classes = 10
-    elif datatype.lower() == CIFAR100:
-        print("Using CIFAR100 dataset.")
-        trainset = torchvision.datasets.CIFAR100(root=train_db_path,
-                                                 train=True, download=True,
-                                                 transform=transform_train)
-        testset = torchvision.datasets.CIFAR100(root=test_db_path,
-                                                train=False, download=True,
-                                                transform=transform_test)
-        n_classes = 100
+    elif datatype.lower() == MNIST:
+        print("Using MNIST dataset.")
+        trainset = torchvision.datasets.MNIST(root=train_db_path,
+                                              train=True, download=True,
+                                              transform=transform_train)
+        testset = torchvision.datasets.MNIST(root=test_db_path,
+                                             train=False, download=True,
+                                             transform=transform_test)
+        n_classes = 10
     else:
         print("Dataset is not supported.")
         return None, None, None
