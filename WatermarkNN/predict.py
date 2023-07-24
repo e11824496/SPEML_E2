@@ -42,7 +42,8 @@ def predict(args):
     test_loss = 0
     correct = 0
     total = 0
-    for batch_idx, (inputs, targets) in enumerate(tqdm(loader)):
+    pbar = tqdm(loader)
+    for batch_idx, (inputs, targets) in enumerate(pbar):
         inputs, targets = inputs.to(device), targets.to(device)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
@@ -53,7 +54,7 @@ def predict(args):
         correct += predicted.eq(targets.data).cpu().sum()
 
         
-        tqdm.write('Loss: %.3f | Acc: %.3f%% (%d/%d)'
+        pbar.set_description('Loss: %.3f | Acc: %.3f%% (%d/%d)'
                     % (test_loss / (batch_idx + 1), 100. * correct / total, correct, total))
 
     

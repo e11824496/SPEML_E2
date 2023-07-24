@@ -14,7 +14,7 @@ save_dir: './checkpoint/'
 # Model name
 save_model: 'model.t7'
 # The path to the pre-trained model, to be used with the resume flag
-load_path: './checkpoint/ckpt.t7'
+load_path: './checkpoint/model.t7'
 # The path to the log directory
 log_dir: './log'
 

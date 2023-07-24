@@ -32,7 +32,8 @@ def train_epoch(epoch, net, criterion, optimizer, logfile, loader, device, wmloa
 
         # the wm_idx to start from
         wm_idx = np.random.randint(len(wminputs))
-    for batch_idx, (inputs, targets) in enumerate(tqdm(loader)):
+    pbar = tqdm(loader)
+    for batch_idx, (inputs, targets) in enumerate(pbar):
         iteration += 1
         inputs, targets = inputs.to(device), targets.to(device)
 
@@ -53,7 +54,7 @@ def train_epoch(epoch, net, criterion, optimizer, logfile, loader, device, wmloa
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
-        tqdm.write('Loss: %.3f | Acc: %.3f%% (%d/%d)'
+        pbar.set_description('Loss: %.3f | Acc: %.3f%% (%d/%d)'
                      % (train_loss / (batch_idx + 1), 100. * correct / total, correct, total))
 
     with open(logfile, 'a') as f:
@@ -67,7 +68,8 @@ def test(net, criterion, logfile, loader, device):
     test_loss = 0
     correct = 0
     total = 0
-    for batch_idx, (inputs, targets) in enumerate(tqdm(loader)):
+    pbar = tqdm(loader)
+    for batch_idx, (inputs, targets) in enumerate(pbar):
         inputs, targets = inputs.to(device), targets.to(device)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
@@ -77,7 +79,7 @@ def test(net, criterion, logfile, loader, device):
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
-        tqdm.write('Loss: %.3f | Acc: %.3f%% (%d/%d)'
+        pbar.set_description('Loss: %.3f | Acc: %.3f%% (%d/%d)'
                      % (test_loss / (batch_idx + 1), 100. * correct / total, correct, total))
 
     with open(logfile, 'a') as f:
