@@ -11,7 +11,7 @@ from helpers.loaders import getdataloader, getwmloader
 from helpers.utils import adjust_learning_rate, parse_args
 from models import ResNet18
 from trainer import test, train_epoch
-from helpers.const import MODELS
+from helpers.consts import MODELS
 
 def train(args):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'

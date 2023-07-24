@@ -12,7 +12,7 @@ from helpers.ImageFolderCustomClass import ImageFolderCustomClass
 
 def _getdatatransformsdb(datatype):
     transform_train, transform_test = None, None
-    if datatype.lower() == CIFAR10:
+    if datatype.upper() == CIFAR10:
         # Data preperation
         print('==> Preparing data..')
         transform_train = transforms.Compose([
@@ -25,7 +25,7 @@ def _getdatatransformsdb(datatype):
             transforms.ToTensor(),
             transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
         ])
-    elif datatype.lower() == MNIST:
+    elif datatype.upper() == MNIST:
         # add transform for MNIST and create 3 channels
         transform_train = transforms.Compose([
             torchvision.transforms.Grayscale(num_output_channels=3),
@@ -67,7 +67,7 @@ def getdataloader(datatype, train_db_path, test_db_path, batch_size):
     n_classes = 0
 
     # Data loaders
-    if datatype.lower() == CIFAR10:
+    if datatype.upper() == CIFAR10:
         print("Using CIFAR10 dataset.")
         trainset = torchvision.datasets.CIFAR10(root=train_db_path,
                                                 train=True, download=True,
@@ -76,7 +76,7 @@ def getdataloader(datatype, train_db_path, test_db_path, batch_size):
                                                train=False, download=True,
                                                transform=transform_test)
         n_classes = 10
-    elif datatype.lower() == MNIST:
+    elif datatype.upper() == MNIST:
         print("Using MNIST dataset.")
         trainset = torchvision.datasets.MNIST(root=train_db_path,
                                               train=True, download=True,
