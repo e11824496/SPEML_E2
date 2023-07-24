@@ -7,7 +7,7 @@ from helpers.utils import progress_bar
 # Train function
 
 
-def train(epoch, net, criterion, optimizer, logfile, loader, device, wmloader=False, tune_all=True):
+def train_epoch(epoch, net, criterion, optimizer, logfile, loader, device, wmloader=False, tune_all=True):
     print('\nEpoch: %d' % epoch)
     net.train()
     train_loss = 0

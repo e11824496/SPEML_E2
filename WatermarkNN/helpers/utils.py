@@ -8,6 +8,8 @@
 import os
 import sys
 import time
+import argparse
+import yaml
 
 import torch
 import torch.nn as nn
@@ -146,3 +148,17 @@ def re_initializer_layer(model, num_classes, layer=None):
     else:
         model.module.linear = nn.Linear(indim, num_classes).cuda()
     return model, private_key
+
+
+def load_yaml(path):
+    with open(path, 'r') as file:
+        config_dict = yaml.safe_load(file)
+    return argparse.Namespace(**config_dict)
+
+
+# Function to parse arguments and return a Namespace object
+def parse_args():
+    parser = argparse.ArgumentParser(description='Train CIFAR-10 models with watermaks.')
+    parser.add_argument('--config', default='config.yaml', help='path to the configuration file in YAML format')
+    args = parser.parse_args()
+    return load_yaml(args.config)

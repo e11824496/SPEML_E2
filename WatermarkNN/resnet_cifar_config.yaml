@@ -1,0 +1,50 @@
+##### PATHS #####
+# The path to the root folder of the training data
+train_db_path: './data'
+# The path to the root folder of the test data
+test_db_path: './data'
+# The dataset to train on [cifar10]
+dataset: 'cifar10'
+# The path to the wm set
+wm_path: './data/trigger_set/'
+# The path to the wm random labels
+wm_lbl: 'labels-cifar.txt'
+# The path to the model directory
+save_dir: './checkpoint/'
+# Model name
+save_model: 'model.t7'
+# The path to the pre-trained model, to be used with the resume flag
+load_path: './checkpoint/ckpt.t7'
+# The path to the log directory
+log_dir: './log'
+
+
+##### TRAINING PARAMETERS #####
+# Learning rate
+lr: 0.01
+# Multiple the learning rate by 0.1 every n epochs
+lradj: 20
+# The batch size
+batch_size: 100
+# The wm batch size
+wm_batch_size: 2
+# The maximum number of epochs
+max_epochs: 60
+# Resume from checkpoint
+resume: false
+# Train with watermarks?
+wmtrain: true
+# The experiment name
+runname: 'train'
+
+##### FINE-TUNING PARAMETERS #####
+fine_tune_lr: 0.001
+# Fine-tune all layers
+tunealllayers: false
+# Reinitialize the last layer
+reinitll: true
+
+
+##### TESTING PARAMETERS #####
+# Test the wm set or cifar10 dataset.
+testwm: true
