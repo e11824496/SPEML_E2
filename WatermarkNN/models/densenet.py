@@ -176,7 +176,7 @@ class DenseNet(nn.Module):
         self.features.add_module('norm5', nn.BatchNorm2d(num_features))
 
         # Linear layer
-        self.classifier = nn.Linear(num_features, num_classes)
+        self.linear = nn.Linear(num_features, num_classes)
 
         # Official init from torch repo.
         for m in self.modules():
@@ -193,7 +193,7 @@ class DenseNet(nn.Module):
         out = F.relu(features, inplace=True)
         out = F.adaptive_avg_pool2d(out, (1, 1))
         out = torch.flatten(out, 1)
-        out = self.classifier(out)
+        out = self.linear(out)
         return out
     
 
@@ -201,7 +201,7 @@ class DenseNet(nn.Module):
         for param in self.parameters():
             param.requires_grad = False
         
-        for param in self.classifier.parameters():
+        for param in self.linear.parameters():
             param.requires_grad = True
 
 
