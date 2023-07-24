@@ -26,8 +26,8 @@ def predict(args):
     # Model
     # Load checkpoint.
     print('==> Resuming from checkpoint..')
-    assert os.path.exists(args.model_path), 'Error: no checkpoint found!'
-    checkpoint = torch.load(args.model_path)
+    assert os.path.exists(args.load_path), 'Error: no checkpoint found!'
+    checkpoint = torch.load(args.load_path)
     net = checkpoint['net']
     acc = checkpoint['acc']
     start_epoch = checkpoint['epoch']

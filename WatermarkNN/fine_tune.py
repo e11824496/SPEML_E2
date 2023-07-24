@@ -42,7 +42,7 @@ def fine_tune(args):
     checkpoint = torch.load(args.load_path)
     net = checkpoint['net']
     acc = checkpoint['acc']
-    start_epoch = checkpoint['epoch']
+    start_epoch = checkpoint['epoch'] + 1
 
     net = net.to(device)
     # support cuda
@@ -73,7 +73,7 @@ def fine_tune(args):
     wm_acc = None
 
     # start training
-    for epoch in range(start_epoch, start_epoch + args.max_epochs):
+    for epoch in range(start_epoch, start_epoch + args.fine_tune_epochs):
         train_epoch(epoch, net, criterion, optimizer, logfile,
                 trainloader, device, wmloader=False, tune_all=args.tunealllayers)
 

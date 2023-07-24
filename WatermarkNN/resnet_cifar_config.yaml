@@ -30,6 +30,8 @@ batch_size: 100
 wm_batch_size: 2
 # The maximum number of epochs
 max_epochs: 60
+# The number of fine_tune epochs
+fine_tune_epochs: 10
 # Resume from checkpoint
 resume: false
 # Train with watermarks?
