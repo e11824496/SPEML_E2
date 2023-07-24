@@ -33,7 +33,7 @@ batch_size: 100
 # The wm batch size
 wm_batch_size: 2
 # The maximum number of epochs
-max_epochs: 60
+max_epochs: 10
 # The number of fine_tune epochs
 fine_tune_epochs: 10
 # Resume from checkpoint
