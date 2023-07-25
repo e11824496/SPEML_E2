@@ -97,7 +97,7 @@ def fine_tune(args):
             os.mkdir(args.save_dir)
         torch.save(state, os.path.join(args.save_dir, str(RUNNAME) + str(args.save_model)))
 
-    return acc, wm_acc
+    return acc_list, wm_acc_list
 
 if __name__ == '__main__':
     args = parse_args()
