@@ -20,7 +20,7 @@ log_dir: './log'
 # The model to use [RESNET, DENSENET]
 model: 'DENSENET'
 # The dataset to train on [CIFAR, MNIST]
-dataset: 'MNIST'
+dataset: 'CIFAR'
 
 
 ##### TRAINING PARAMETERS #####

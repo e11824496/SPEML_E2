@@ -70,7 +70,9 @@ def fine_tune(args):
     test(net, criterion, logfile, testloader, device)
 
     acc = None
+    acc_list = []
     wm_acc = None
+    wm_acc_list = []
 
     # start training
     for epoch in range(start_epoch, start_epoch + args.fine_tune_epochs):
@@ -79,9 +81,11 @@ def fine_tune(args):
 
         print("Test acc:")
         acc = test(net, criterion, logfile, testloader, device)
+        acc_list.append(acc.item())
 
         print("WM acc:")
         wm_acc = test(net, criterion, logfile, wmloader, device)
+        wm_acc_list.append(wm_acc.item())
 
         print('Saving..')
         state = {
